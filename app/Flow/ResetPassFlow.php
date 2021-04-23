@@ -25,7 +25,6 @@ class ResetPassFlow
 
     public function send_Mail($request){
         try{
-            $archivos = $_FILES;
             $configCorreo   = $_REQUEST;
             $files = $request->file('file');
             //dd($files);
@@ -42,15 +41,6 @@ class ResetPassFlow
             $cuerpo =$configCorreo['cuerpo'];
             $asunto =$configCorreo['asunto'];
             
-            /*$tmp_name = $archivos['file']['tmp_name'] ??  NULL;
-            $name = $archivos['file']['name'] ??  NULL;
-            $tipo = $archivos['file']['type'] ??  NULL;*/
-            
-            foreach($archivos as $archivo){
-                $tmp_name = $archivo['tmp_name'] ??  NULL;
-                $name = $archivo['name'] ??  NULL;
-                $tipo = $archivo['type'] ??  NULL;
-            }
             //dd($tmp_name,$name);
             //dd($archivos);
             $this->modelCorreo->setMAIL_DRIVER($MAIL_MAILER);
@@ -65,9 +55,7 @@ class ResetPassFlow
             $this->modelCorreo->setCorreos_principal($correos_principal);
             $this->modelCorreo->setCuerpo($cuerpo);
             $this->modelCorreo->setAsunto($asunto);
-            $this->modelCorreo->setAdjunto($tmp_name);
-            $this->modelCorreo->setName($name);
-            $this->modelCorreo->setTipo($tipo);
+            $this->modelCorreo->setAdjunto($files);
             
             
             // set_include_path('/home/viamatica/Descargas/200023025634_003212');
@@ -80,7 +68,7 @@ class ResetPassFlow
 
             $data = array('name' => $this->modelCorreo->getcuerpo());
             
-            $bool = Mail::send('mail', $data, function ($message) use ($files){
+            $bool = Mail::send('mail', $data, function ($message){
                 
                 $multiplesCorreoPrincipal =explode(';',$this->modelCorreo->getCorreos_principal());    
                 $multiplesCorreoCopia =explode(';',$this->modelCorreo->getCorreos_copia());    
@@ -90,7 +78,10 @@ class ResetPassFlow
                 $message->cc($multiplesCorreoCopia);
                 if($this->modelCorreo->getAdjunto()!= null)
                 {   
-                    foreach($files as $f){
+                    //dd($this->modelCorreo->getAdjunto());
+                    $arch = $this->modelCorreo->getAdjunto();
+                    //dd($arch);
+                    foreach($arch as $f){
                         //dd($f);
                         $message->attach($f->getRealPath(),
                                 [
@@ -98,13 +89,6 @@ class ResetPassFlow
                                     "mine"=>$f->getMimeType()
                                 ]);
                     }
-                    /*dd($this->modelCorreo->getAdjunto());
-                    $message->attach($this->modelCorreo->getAdjunto(),
-                                [
-                                    "as"=>$this->modelCorreo->getName(),
-                                    "mine"=>$this->modelCorreo->getTipo()
-                                ]);*/
-                    
                 }
                 
             },true);

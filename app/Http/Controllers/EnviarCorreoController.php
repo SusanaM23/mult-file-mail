@@ -21,7 +21,7 @@ class EnviarCorreoController extends Controller{
             //$file = $request->file();
             //$data   = $_REQUEST;
             //dd($data,$file,$archivos); 
-            $et      =  $this->resetPassFlow->send_Mail($request);
+            $et = $this->resetPassFlow->send_Mail($request);
         }catch(\Exception $e){
         }
         return response()->json($et);

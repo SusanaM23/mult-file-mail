@@ -184,45 +184,17 @@ class CorreoModels {
 
 
     /**
-     * @param String $adjunto
+     * @param Mixed $adjunto
      */
     public function setAdjunto($adjunto){
         $this->adjunto = $adjunto;
     }
 
      /**
-     * @return String $adjunto
+     * @return Mixed $adjunto
      */
     public function getAdjunto(){
         return $this->adjunto;
-    }
-
-    /**
-     * @param String $name
-     */
-    public function setName($name){
-        $this->name = $name;
-    }
-
-     /**
-     * @return String $name
-     */
-    public function getName(){
-        return $this->name;
-    }
-
-    /**
-     * @param String $tipo
-     */
-    public function setTipo($tipo){
-        $this->tipo = $tipo;
-    }
-
-     /**
-     * @return String $tipo
-     */
-    public function getTipo(){
-        return $this->tipo;
     }
 
 }
