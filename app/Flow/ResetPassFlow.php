@@ -27,11 +27,8 @@ class ResetPassFlow
         try{
             $archivos = $_FILES;
             $configCorreo   = $_REQUEST;
-            //$ruta = $archivos['file']['tmp_name'];
-            //$file = $data->file();
-            //dd($data,$archivos); 
-            //$configCorreo = json_decode($data,true);
-            //dd($configCorreo);
+            $files = $request->file('file');
+            //dd($files);
             $MAIL_MAILER =$configCorreo['MAIL_MAILER'];
             $MAIL_HOST =$configCorreo['MAIL_HOST'];
             $MAIL_PORT =$configCorreo['MAIL_PORT'];
@@ -44,8 +41,18 @@ class ResetPassFlow
             $correos_principal =$configCorreo['correos_principal'];
             $cuerpo =$configCorreo['cuerpo'];
             $asunto =$configCorreo['asunto'];
-            //$adjunto = $file ??  NULL;
-
+            
+            /*$tmp_name = $archivos['file']['tmp_name'] ??  NULL;
+            $name = $archivos['file']['name'] ??  NULL;
+            $tipo = $archivos['file']['type'] ??  NULL;*/
+            
+            foreach($archivos as $archivo){
+                $tmp_name = $archivo['tmp_name'] ??  NULL;
+                $name = $archivo['name'] ??  NULL;
+                $tipo = $archivo['type'] ??  NULL;
+            }
+            //dd($tmp_name,$name);
+            //dd($archivos);
             $this->modelCorreo->setMAIL_DRIVER($MAIL_MAILER);
             $this->modelCorreo->setMAIL_HOST($MAIL_HOST);
             $this->modelCorreo->setMAIL_PORT($MAIL_PORT);
@@ -58,8 +65,9 @@ class ResetPassFlow
             $this->modelCorreo->setCorreos_principal($correos_principal);
             $this->modelCorreo->setCuerpo($cuerpo);
             $this->modelCorreo->setAsunto($asunto);
-            //$this->modelCorreo->setAdjunto($adjunto);
-            
+            $this->modelCorreo->setAdjunto($tmp_name);
+            $this->modelCorreo->setName($name);
+            $this->modelCorreo->setTipo($tipo);
             
             
             // set_include_path('/home/viamatica/Descargas/200023025634_003212');
@@ -72,7 +80,7 @@ class ResetPassFlow
 
             $data = array('name' => $this->modelCorreo->getcuerpo());
             
-            $bool = Mail::send('mail', $data, function ($message) use ($archivos){
+            $bool = Mail::send('mail', $data, function ($message) use ($files){
                 
                 $multiplesCorreoPrincipal =explode(';',$this->modelCorreo->getCorreos_principal());    
                 $multiplesCorreoCopia =explode(';',$this->modelCorreo->getCorreos_copia());    
@@ -80,20 +88,23 @@ class ResetPassFlow
                 $message->to($multiplesCorreoPrincipal, '')->subject($this->modelCorreo->getAsunto());//donde llega 
                 $message->from($this->modelCorreo->getMAIL_FROM_ADDRESS(), $this->modelCorreo->getMAIL_FROM_NAME());//desde donde sale el correo
                 $message->cc($multiplesCorreoCopia);
-                if($archivos!= null)
-                {
-                    //dd($archivos);
-                    for ($i=0; $i<$archivos; $i++){
-                        foreach($archivos as $archivo){
-                            dd($archivo);
-                            $message->attach($archivo['tmp_name']['i'],
-                            [
-                                "as"=>$archivo['name']['i'],
-                                "mine"=>$archivo['name']['i']
-                            ]);
-                        }}
+                if($this->modelCorreo->getAdjunto()!= null)
+                {   
+                    foreach($files as $f){
+                        //dd($f);
+                        $message->attach($f->getRealPath(),
+                                [
+                                    "as"=>$f->getClientOriginalName(),
+                                    "mine"=>$f->getMimeType()
+                                ]);
+                    }
+                    /*dd($this->modelCorreo->getAdjunto());
+                    $message->attach($this->modelCorreo->getAdjunto(),
+                                [
+                                    "as"=>$this->modelCorreo->getName(),
+                                    "mine"=>$this->modelCorreo->getTipo()
+                                ]);*/
                     
-                    //dd($archivos);
                 }
                 
             },true);
