@@ -18,9 +18,9 @@ class EnviarCorreoController extends Controller{
     public function envio(Request $request){
         try{
             //$archivos = $_FILES;
-            //$file = $request->file();
+            //$files = $request->file();
             //$data   = $_REQUEST;
-            //dd($data,$file,$archivos); 
+            //dd($files); 
             $et = $this->resetPassFlow->send_Mail($request);
         }catch(\Exception $e){
         }

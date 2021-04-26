@@ -12,7 +12,7 @@
                                     <table cellpadding="0" cellspacing="0" width="100%">
                                         <tbody>
                                             <tr>
-                                                <td align="center" class="esd-block-image" style="font-size: 0px;"><a target="_blank"><img class="adapt-img" src="https://tlr.stripocdn.email/content/guids/CABINET_26a0436290e8d4bfb62f4a7669434c8d/images/1041585649899428.gif" alt style="display: block;" width="600"></a></td>
+                                                <td align="center" class="esd-block-image" style="font-size: 0px;"><a target="_blank"></a></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -31,11 +31,11 @@
                                     <table cellpadding="0" cellspacing="0" width="100%">
                                         <tbody>
                                             <tr>
-                                                <td align="center" class="esd-block-image es-p15b" style="font-size: 0px;"><a target="_blank"><img src="https://tlr.stripocdn.email/content/guids/CABINET_26a0436290e8d4bfb62f4a7669434c8d/images/21121585650426370.png" alt style="display: block;" width="100"></a></td>
+                                                <td align="center" class="esd-block-image es-p15b" style="font-size: 0px;"><a target="_blank"></a></td>
                                             </tr>
                                             <tr>
                                                 <td align="center" class="esd-block-text es-m-txt-c">
-                                                    <h2 style="font-size: 28px; color: #00b7c1;">Happy Easter</h2>
+                                                    <h2 style="font-size: 28px; color: #0079e4;"></h2>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -73,7 +73,7 @@
                                     <table cellpadding="0" cellspacing="0" width="100%">
                                         <tbody>
                                             <tr>
-                                                <td align="center" class="esd-block-image" style="font-size:0"><a target="_blank"><img class="adapt-img" src="https://tlr.stripocdn.email/content/guids/CABINET_26a0436290e8d4bfb62f4a7669434c8d/images/74001567514648241.png" alt style="display: block;" width="600"></a></td>
+                                                <td align="center" class="esd-block-image" style="font-size:0"><a target="_blank"></a></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -86,4 +86,3 @@
         </tbody>
     </table>
 </td>
-<p>Sending Mail using Lumen.</p>

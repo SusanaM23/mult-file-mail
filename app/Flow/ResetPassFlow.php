@@ -25,9 +25,11 @@ class ResetPassFlow
 
     public function send_Mail($request){
         try{
-            $configCorreo   = $_REQUEST;
-            $files = $request->file('file');
-            //dd($files);
+            $configCorreo = $_REQUEST;
+            $files = $_FILES;
+
+            $arregloFile = $this->incoming_files($files);
+
             $MAIL_MAILER =$configCorreo['MAIL_MAILER'];
             $MAIL_HOST =$configCorreo['MAIL_HOST'];
             $MAIL_PORT =$configCorreo['MAIL_PORT'];
@@ -41,8 +43,6 @@ class ResetPassFlow
             $cuerpo =$configCorreo['cuerpo'];
             $asunto =$configCorreo['asunto'];
             
-            //dd($tmp_name,$name);
-            //dd($archivos);
             $this->modelCorreo->setMAIL_DRIVER($MAIL_MAILER);
             $this->modelCorreo->setMAIL_HOST($MAIL_HOST);
             $this->modelCorreo->setMAIL_PORT($MAIL_PORT);
@@ -55,7 +55,7 @@ class ResetPassFlow
             $this->modelCorreo->setCorreos_principal($correos_principal);
             $this->modelCorreo->setCuerpo($cuerpo);
             $this->modelCorreo->setAsunto($asunto);
-            $this->modelCorreo->setAdjunto($files);
+            $this->modelCorreo->setAdjunto($arregloFile);
             
             
             // set_include_path('/home/viamatica/Descargas/200023025634_003212');
@@ -78,17 +78,26 @@ class ResetPassFlow
                 $message->cc($multiplesCorreoCopia);
                 if($this->modelCorreo->getAdjunto()!= null)
                 {   
-                    //dd($this->modelCorreo->getAdjunto());
                     $arch = $this->modelCorreo->getAdjunto();
                     //dd($arch);
+
                     foreach($arch as $f){
-                        //dd($f);
+                            $message->attach($f['tmp_name'],
+                                    [
+                                        "as"=>$f['name'],
+                                        "mine"=>$f['type']
+                                    ]);
+                        
+                    }
+
+                    /*foreach($arch as $f){
+                        dd($f);
                         $message->attach($f->getRealPath(),
                                 [
                                     "as"=>$f->getClientOriginalName(),
                                     "mine"=>$f->getMimeType()
                                 ]);
-                    }
+                    }*/
                 }
                 
             },true);
@@ -98,6 +107,32 @@ class ResetPassFlow
         }catch(\Exception $e){
             //throw new \Exception(className($this) . ' :: enviar Correo -> ' . $e->getMessage());
         }
+    }
+
+
+    //Ordena Array de archivos
+    public function incoming_files($files) {
+        $files2 = [];
+        foreach ($files as $input => $infoArr) {
+            $filesByInput = [];
+            foreach ($infoArr as $key => $valueArr) {
+                if (is_array($valueArr)) { // file input "multiple"
+                    foreach($valueArr as $i=>$value) {
+                        $filesByInput[$i][$key] = $value;
+                    }
+                }
+                else { // -> string, normal file input
+                    $filesByInput[] = $infoArr;
+                    break;
+                }
+            }
+            $files2 = array_merge($files2,$filesByInput);
+        }
+        $files3 = [];
+        foreach($files2 as $file) { // let's filter empty & errors
+            if (!$file['error']) $files3[] = $file;
+        }
+        return $files3;
     }
 
 }
